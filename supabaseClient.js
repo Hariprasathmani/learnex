@@ -1,4 +1,0 @@
-// backend/supabaseClient.js
-const SUPABASE_URL = 'https://azvlafszecymihxnkaci.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6dmxhZnN6ZWN5bWloeG5rYWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTY3NzIsImV4cCI6MjA3NDk5Mjc3Mn0.l1AZ-W7AZJ_9FO2an0frvii2D0xwwCV6bgn0O1pLT54';
-window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
