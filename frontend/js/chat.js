@@ -34,7 +34,8 @@ function initChat() {
     showTypingIndicator();
 
     try {
-      const response = await fetch('http://127.0.0.1:3001/chat', {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:3001';
+      const response = await fetch(`${backendUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_message: message }),

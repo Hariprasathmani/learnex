@@ -22,8 +22,8 @@ if (!GEMINI_API_KEY || GEMINI_API_KEY === 'PLACEHOLDER_INSERT_YOUR_KEY_HERE') {
     process.exit(1);
 }
 
-// Model URL using the corrected, current model (gemini-2.5-flash)
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+// Model URL using the corrected, current model (gemini-1.5-flash)
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 
 // ----------------------
@@ -87,7 +87,7 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 app.listen(port, '0.0.0.0', () => {
-    console.log(`✅ Gemini chatbot proxy running at http://127.0.0.1:${port}`);
+    console.log(`✅ Gemini chatbot proxy running on port ${port}`);
 });
