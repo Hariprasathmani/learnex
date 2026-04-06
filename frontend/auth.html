@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnEx - Sign In</title>
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <script type="module" src="./js/auth-guard.js"></script>
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card card">
+      <div class="auth-logo-area">
+        <h1 class="auth-app-title">LearnEx</h1>
+        <p class="auth-tagline">Your Personal Learning Companion</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login">Sign In</button>
+        <button class="auth-tab" id="tab-signup">Sign Up</button>
+      </div>
+
+      <div id="auth-message" class="message-box"></div>
+
+      <!-- Login Form -->
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email</label>
+          <input class="form-input" type="email" id="login-email" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group" style="position: relative;">
+          <label class="form-label" for="login-password">Password</label>
+          <input class="form-input" type="password" id="login-password" placeholder="Enter your password" required minlength="6" />
+          <div style="text-align: right; margin-top: 6px;">
+            <a href="#" id="link-forgot-password" style="font-size: 0.8rem; color: var(--accent); text-decoration: none;">Forgot Password?</a>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;" id="btn-login-submit">
+          Sign In
+        </button>
+      </form>
+
+      <!-- Forgot Password Form -->
+      <form id="forgot-form" class="hidden">
+        <p style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text-secondary);">Enter your email to receive a password reset link.</p>
+        <div class="form-group">
+          <label class="form-label" for="forgot-email">Email</label>
+          <input class="form-input" type="email" id="forgot-email" placeholder="Enter your email" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-bottom: 16px;" id="btn-forgot-submit">
+          Send Reset Link
+        </button>
+        <div style="text-align: center;">
+          <a href="#" id="link-back-login" style="font-size: 0.85rem; color: var(--accent); text-decoration: none;">Back to Sign In</a>
+        </div>
+      </form>
+
+      <!-- Reset Password Form (Change Password) -->
+      <form id="reset-form" class="hidden">
+        <p style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text-secondary);">Choose a new password for your account.</p>
+        <div class="form-group">
+          <label class="form-label" for="new-password">New Password</label>
+          <input class="form-input" type="password" id="new-password" placeholder="Enter your new password" required minlength="6" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="confirm-password">Confirm Password</label>
+          <input class="form-input" type="password" id="confirm-password" placeholder="Confirm your new password" required minlength="6" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-bottom: 16px;" id="btn-reset-submit">
+          Update Password
+        </button>
+      </form>
+
+      <!-- Signup Form -->
+      <form id="signup-form" class="hidden">
+        <div class="form-group">
+          <label class="form-label" for="signup-name">Full Name</label>
+          <input class="form-input" type="text" id="signup-name" placeholder="Enter your name" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-email">Email</label>
+          <input class="form-input" type="email" id="signup-email" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-password">Password</label>
+          <input class="form-input" type="password" id="signup-password" placeholder="Create a password (min 6 chars)" required minlength="6" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;" id="btn-signup-submit">
+          Create Account
+        </button>
+      </form>
+    </div>
+  </div>
+  <script type="module" src="./js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnEx - My Notes</title>
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <script type="module" src="./js/auth-guard.js"></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="page-header-text">
+          <h1>My Notes</h1>
+          <p>Create, organize, and attach files to your learning materials</p>
+        </div>
+        <button class="btn btn-primary" id="btn-create-note">+ Create Note</button>
+      </div>
+
+      <div id="notes-message" class="message-box"></div>
+
+      <div id="notes-grid" class="notes-grid">
+        <div class="spinner"></div>
+      </div>
+    </main>
+
+    <!-- Note Modal -->
+    <div class="modal-backdrop" id="note-modal-wrap">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="note-modal-title">Create Note</h2>
+          <button class="close-btn" id="btn-close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="note-form">
+            <input type="hidden" id="note-id" />
+            <div class="form-group">
+              <label class="form-label">Note Title</label>
+              <input type="text" class="form-input" id="note-title-input" required placeholder="e.g. Advanced Calculus Ch 4" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Content</label>
+              <textarea class="form-textarea" id="note-content-input" placeholder="Start typing your notes..."></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Attachments (<span id="file-count-label">0</span> files)</label>
+              <div class="drop-zone" id="drop-zone">
+                <div class="drop-zone-icon">📥</div>
+                <div class="drop-zone-text">Drag & drop files here or click to browse</div>
+                <div class="drop-zone-hint">Supports PDF, Images, Word (.docx)</div>
+                <input type="file" id="file-input" multiple class="hidden" accept=".pdf,image/*,.doc,.docx" />
+              </div>
+              <div class="file-preview-grid" id="file-preview-grid"></div>
+            </div>
+            
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="btn-cancel-note">Cancel</button>
+          <button class="btn btn-primary" type="submit" form="note-form" id="btn-save-note">Save Note</button>
+        </div>
+      </div>
+    </div>
+    <!-- View Modal -->
+    <div class="modal-backdrop" id="view-modal-wrap">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="view-modal-title">Note Title</h2>
+          <button class="close-btn" id="btn-close-view-modal">&times;</button>
+        </div>
+        <div class="modal-body" style="padding-top: 0;">
+          <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 15px;" id="view-modal-date"></div>
+          <div class="form-group">
+            <div id="view-modal-content" style="white-space: pre-wrap; margin-bottom: 20px; line-height: 1.6; color: var(--text-primary);"></div>
+          </div>
+          <div class="form-group" id="view-modal-attachments-wrap" style="display: none;">
+            <label class="form-label" style="border-top: 1px solid var(--border); padding-top: 15px;">Attachments</label>
+            <div class="file-preview-grid" id="view-modal-files"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="btn-done-view">Done</button>
+        </div>
+      </div>
+    </div>
+    <!-- File Preview Modal -->
+    <div class="modal-backdrop" id="preview-modal-wrap" style="z-index: 9999;">
+      <div class="modal" style="width: 90vw; height: 90vh; max-width: none; background: var(--bg-card); display: flex; flex-direction: column;">
+        <div class="modal-header" style="padding: 15px 25px;">
+          <h2 id="preview-modal-title" style="font-size: 1.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Preview</h2>
+          <div>
+            <a href="#" id="preview-modal-download" target="_blank" class="btn btn-primary btn-sm" style="margin-right: 15px; text-decoration: none;">Download</a>
+            <button class="close-btn" id="btn-close-preview-modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body" id="preview-modal-body" style="flex: 1; padding: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000;">
+          <!-- Content injected via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./js/notes.js"></script>
+</body>
+</html>

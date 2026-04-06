@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnEx - Pomodoro Timer</title>
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <script type="module" src="./js/auth-guard.js"></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="page-header-text">
+          <h1>Pomodoro Timer</h1>
+          <p>Stay focused and maximize your productivity</p>
+        </div>
+        <button class="btn btn-ghost" id="btn-timer-settings">⚙️ Settings</button>
+      </div>
+
+      <div id="timer-message" class="message-box"></div>
+
+      <div class="timer-page">
+        <!-- SVG Ring Timer -->
+        <div class="timer-ring-wrap">
+          <svg width="280" height="280" viewBox="0 0 280 280">
+            <circle class="timer-ring-bg" cx="140" cy="140" r="130"></circle>
+            <circle class="timer-ring-progress" id="timer-ring" cx="140" cy="140" r="130"></circle>
+          </svg>
+          <div class="timer-time">
+            <div class="timer-phase-label" id="timer-phase-label">Focus</div>
+            <div class="timer-digits" id="timer-digits">25:00</div>
+          </div>
+        </div>
+
+        <div class="pomodoro-dots" id="pomodoro-dots">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="timer-controls">
+          <button class="btn btn-primary btn-lg" id="btn-timer-toggle" style="width: 140px;">Start</button>
+          <button class="btn btn-ghost btn-lg" id="btn-timer-reset">Reset</button>
+        </div>
+        
+        <!-- Stats -->
+        <div class="timer-stat-row">
+          <div class="card" style="text-align: center;">
+            <div class="text-accent" style="font-size: 1.5rem; font-weight: 800;" id="stat-f-mins">0</div>
+            <div class="timer-label-sm">Focus Mins</div>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div class="text-success" style="font-size: 1.5rem; font-weight: 800;" id="stat-pomos">0</div>
+            <div class="timer-label-sm">Pomodoros</div>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div class="text-warning" style="font-size: 1.5rem; font-weight: 800;" id="stat-breaks">0</div>
+            <div class="timer-label-sm">Break Mins</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop" id="timer-modal-wrap">
+      <div class="modal" style="max-width: 400px;">
+        <div class="modal-header">
+          <h2>Timer Settings</h2>
+          <button class="close-btn" id="btn-close-timer-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-row">
+            <div class="form-group">
+              <label class="form-label">Focus (mins)</label>
+              <input type="number" id="setting-focus" class="form-input" value="25" min="1" max="90" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Short Break (mins)</label>
+              <input type="number" id="setting-short" class="form-input" value="5" min="1" max="30" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Long Break (mins)</label>
+            <input type="number" id="setting-long" class="form-input" value="15" min="1" max="60" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="btn-save-settings">Save Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./js/timer.js"></script>
+</body>
+</html>

@@ -1,4 +1,9 @@
-const supabase = window.supabaseClient;
+import { createClient } from '@supabase/supabase-js';
+
+const SUPABASE_URL = 'https://vgbftlxsoywzgqvovwfe.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnYmZ0bHhzb3l3emdxdm92d2ZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4OTE1MTgsImV4cCI6MjA4NzQ2NzUxOH0.ib8k4LacZ6n2wEmXKeDfxmTbVzYqar6QBdMU5kdig3o';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const state = {
   currentUser: null,
@@ -21,23 +26,7 @@ function showMessage(elementId, message, type) {
     }, 4000);
   }
 }
-window.addEventListener('hashchange', () => {
-  const hash = window.location.hash.replace('#', '');
-  if (hash) {
-    navigateToView(hash);
-  } else {
-    navigateToView('dashboard'); // or 'auth-page' if not logged in
-  }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  const hash = window.location.hash.replace('#', '');
-  if (hash) {
-    navigateToView(hash);
-  } else {
-    navigateToView('dashboard'); // or 'auth-page' if not logged in
-  }
-});
+// Hash-based navigation handled after auth check in the main DOMContentLoaded below
 
 
 // Page and sidebar navigation
@@ -54,8 +43,8 @@ function navigateToView(viewId) {
   state.currentView = viewId;
   document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
   const pageEl = document.getElementById(`${viewId}-view`);
-if (pageEl) pageEl.classList.add('active');
-else console.error('No such view:', `${viewId}-view`);
+  if (pageEl) pageEl.classList.add('active');
+  else console.error('No such view:', `${viewId}-view`);
 
   document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
   document.querySelector(`.nav-item[data-view="${viewId}"]`)?.classList.add('active');
@@ -69,30 +58,31 @@ function initAuthPage() {
   console.log('Initializing auth page');
   const loginForm = document.getElementById('login-form');
   const signupForm = document.getElementById('signup-form');
+  const signupLink = document.getElementById('show-signup');
+  const loginLink = document.getElementById('show-login');
 
-  // Clone links to remove old listeners and get fresh references
-  const oldSignupLink = document.getElementById('show-signup');
-  const newSignupLink = oldSignupLink.cloneNode(true);
-  oldSignupLink.parentNode.replaceChild(newSignupLink, oldSignupLink);
+  if (signupLink) {
+    // Remove old listeners by replacing with a clone
+    const newSignupLink = signupLink.cloneNode(true);
+    signupLink.parentNode.replaceChild(newSignupLink, signupLink);
+    newSignupLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginForm.style.display = 'none';
+      signupForm.style.display = 'block';
+    });
+  }
 
-  const oldLoginLink = document.getElementById('show-login');
-  const newLoginLink = oldLoginLink.cloneNode(true);
-  oldLoginLink.parentNode.replaceChild(newLoginLink, oldLoginLink);
+  if (loginLink) {
+    const newLoginLink = loginLink.cloneNode(true);
+    loginLink.parentNode.replaceChild(newLoginLink, loginLink);
+    newLoginLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      signupForm.style.display = 'none';
+      loginForm.style.display = 'block';
+    });
+  }
 
-  // Attach event listeners on the new links
-  newSignupLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginForm.style.display = 'none';
-    signupForm.style.display = 'block';
-  });
 
-  newLoginLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    signupForm.style.display = 'none';
-    loginForm.style.display = 'block';
-  });
-
-  
 
 
   // Supabase Signup
@@ -112,7 +102,10 @@ function initAuthPage() {
       options: { data: { full_name: name } },
     });
     if (error) {
-      showMessage('message-box', error.message, 'error');
+      const msg = error.message === 'Failed to fetch'
+        ? 'Signup failed: Connection error. Please check if your Supabase project is active/resumed.'
+        : error.message;
+      showMessage('message-box', msg, 'error');
       return;
     }
     showMessage('message-box', 'Account created! Please check your email to confirm before logging in.', 'success');
@@ -136,6 +129,8 @@ function initAuthPage() {
     if (error) {
       if (error.message.includes('email not confirmed')) {
         showMessage('message-box', 'Please confirm your email. Check your inbox.', 'error');
+      } else if (error.message === 'Failed to fetch') {
+        showMessage('message-box', 'Login failed: Connection error. Please check if your Supabase project is active/resumed.', 'error');
       } else {
         showMessage('message-box', error.message, 'error');
       }
@@ -316,7 +311,7 @@ function renderNotes() {
 }
 function renderRecentNotes() {
   const recentList = document.getElementById('recent-notes-list');
-  if(!state.notes || state.notes.length === 0) {
+  if (!state.notes || state.notes.length === 0) {
     recentList.innerHTML = '<p class="empty-message">No notes yet. Create your first note!</p>';
     return;
   }
@@ -324,16 +319,16 @@ function renderRecentNotes() {
   recentList.innerHTML = recentNotes.map(note => `
     <div class="note-card">
       <h4>${note.title}</h4>
-      <div class="note-date">${note.created_at?.substring(0,10) || ''}</div>
+      <div class="note-date">${note.created_at?.substring(0, 10) || ''}</div>
       ${note.file_url ? `<div><a href="${note.file_url}" target="_blank">📄 PDF</a></div>` : ''}
     </div>
   `).join('');
 }
 
 
-window.editNote = function(noteId) { openNoteForm(noteId); };
+window.editNote = function (noteId) { openNoteForm(noteId); };
 
-window.deleteNote = async function(noteId) {
+window.deleteNote = async function (noteId) {
   if (confirm('Are you sure you want to delete this note?')) {
     const { error } = await supabase.from('notes')
       .delete()
@@ -432,22 +427,31 @@ async function fetchStreak() {
     .select('*')
     .eq('user_id', state.currentUser.id)
     .single();
+
   if (error && error.code !== 'PGRST116') {
-    showMessage('message-box', error.message, 'error');
+    console.error('fetchStreak error:', error);
+    // Table likely missing — show a helpful message
+    const msg = error.message?.includes('does not exist')
+      ? '⚠️ Streak table not found. Please run the SQL migration in your Supabase dashboard.'
+      : error.message;
+    showMessage('message-box-dashboard', msg, 'error');
     state.streak = 0;
     state.lastStreakDate = null;
     updateDashboard();
     return;
   }
+
   if (data) {
     state.streak = data.streak_count;
     state.lastStreakDate = data.last_streak_date;
   } else {
-    await supabase.from('streaks').insert({
+    // No row yet — create one for this user
+    const { error: insertErr } = await supabase.from('streaks').insert({
       user_id: state.currentUser.id,
       streak_count: 0,
       last_streak_date: null,
     });
+    if (insertErr) console.error('streak insert error:', insertErr);
     state.streak = 0;
     state.lastStreakDate = null;
   }
@@ -455,19 +459,21 @@ async function fetchStreak() {
 }
 
 async function incrementStreak() {
+  if (!state.currentUser) return;
   const today = new Date().toISOString().slice(0, 10);
+
   if (state.lastStreakDate === today) {
-    showMessage('message-box', 'You already logged your study session today!', 'error');
+    showMessage('message-box-dashboard', 'You already logged your study session today! ✅', 'error');
     return;
   }
 
+  // Consecutive day? Keep streak going, otherwise reset to 1
   let newStreakCount = 1;
   if (state.lastStreakDate) {
-    const lastDate = new Date(state.lastStreakDate);
-    lastDate.setDate(lastDate.getDate() + 1);
-    const todayDate = new Date(today);
-    if (lastDate.toISOString().slice(0, 10) === today) {
-      newStreakCount = state.streak + 1;
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (yesterday.toISOString().slice(0, 10) === state.lastStreakDate) {
+      newStreakCount = (state.streak || 0) + 1;
     }
   }
 
@@ -481,37 +487,54 @@ async function incrementStreak() {
     }, { onConflict: 'user_id' });
 
   if (error) {
-    showMessage('message-box', error.message, 'error');
+    console.error('incrementStreak error:', error);
+    const msg = error.message?.includes('does not exist')
+      ? '⚠️ Streak table not found. Please run the SQL migration in your Supabase dashboard.'
+      : error.message;
+    showMessage('message-box-dashboard', msg, 'error');
   } else {
     state.streak = newStreakCount;
     state.lastStreakDate = today;
     updateDashboard();
-    showMessage('message-box', `Great job! Your streak is now ${newStreakCount} days!`, 'success');
+    showMessage('message-box-dashboard', `🔥 Great job! Your streak is now ${newStreakCount} day${newStreakCount === 1 ? '' : 's'}!`, 'success');
   }
 }
 
-// Chatbot
-// Use this function to send message to your local OpenAI proxy server
+// Chatbot - sends message to local Gemini proxy server
 async function getBotResponseFromAI(message) {
-  const response = await fetch('http://localhost:3001/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ user_message: message }),
-  });
+  try {
+    const response = await fetch('http://127.0.0.1:3001/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_message: message }),
+    });
 
-  const data = await response.json();
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      const detail = errData?.details?.error?.message || errData?.error || `HTTP ${response.status}`;
+      throw new Error(detail);
+    }
 
-  if (data.choices && data.choices.length > 0) {
-    return data.choices[0].message.content;
-  } else {
-    return 'Sorry, I am currently unable to respond.';
+    const data = await response.json();
+
+    if (data.choices && data.choices.length > 0) {
+      return data.choices[0].message.content;
+    } else {
+      return 'Sorry, I received an unexpected response from the AI.';
+    }
+  } catch (err) {
+    const detailedError = err.message === 'Failed to fetch' 
+      ? 'Could not connect to the AI backend. Please ensure the server is running on 127.0.0.1:3001.' 
+      : err.message;
+    return `⚠️ Error: ${detailedError}`;
   }
 }
 
-// Updated chat submit handler
+// Chat submit handler
 async function handleChatSubmit(e) {
   e.preventDefault();
   const input = document.getElementById('chat-input');
+  const sendBtn = document.querySelector('#chat-form button[type="submit"]');
   const message = input.value.trim();
   if (!message) return;
 
@@ -523,16 +546,34 @@ async function handleChatSubmit(e) {
   userMessageDiv.innerHTML = `
     <div class="message-avatar">👤</div>
     <div class="message-content">
-      <p>${message}</p>
-      <span class="message-time">Just now</span>
+      <p>${escapeHtml(message)}</p>
+      <span class="message-time">${formatTime()}</span>
     </div>
   `;
   chatMessages.appendChild(userMessageDiv);
   input.value = '';
+  input.disabled = true;
+  sendBtn.disabled = true;
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  // Show typing indicator
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'chat-message bot-message';
+  typingDiv.id = 'typing-indicator';
+  typingDiv.innerHTML = `
+    <div class="message-avatar">🤖</div>
+    <div class="message-content typing-indicator">
+      <span></span><span></span><span></span>
+    </div>
+  `;
+  chatMessages.appendChild(typingDiv);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 
   // Fetch AI response from proxy backend
   const botReply = await getBotResponseFromAI(message);
+
+  // Remove typing indicator
+  document.getElementById('typing-indicator')?.remove();
 
   // Display AI response
   const botMessageDiv = document.createElement('div');
@@ -540,32 +581,39 @@ async function handleChatSubmit(e) {
   botMessageDiv.innerHTML = `
     <div class="message-avatar">🤖</div>
     <div class="message-content">
-      <p>${botReply}</p>
-      <span class="message-time">Just now</span>
+      <p>${formatBotReply(botReply)}</p>
+      <span class="message-time">${formatTime()}</span>
     </div>
   `;
   chatMessages.appendChild(botMessageDiv);
   chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  input.disabled = false;
+  sendBtn.disabled = false;
+  input.focus();
 }
 
-// Attach event listener
-document.getElementById('chat-form').addEventListener('submit', handleChatSubmit);
-
-
-// View navigation
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', event => {
-    event.preventDefault();
-    const view = item.dataset.view;
-    showView(view);
-  });
-});
-function showView(view) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  const activeView = document.getElementById(`${view}-view`);
-  if (activeView) activeView.classList.add('active');
-  if (view === 'planner') fetchPlanner();
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(text));
+  return div.innerHTML;
 }
+
+function formatBotReply(text) {
+  // Basic markdown-like formatting
+  return escapeHtml(text)
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`(.*?)`/g, '<code>$1</code>')
+    .replace(/\n/g, '<br>');
+}
+
+function formatTime() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+// NOTE: chat-form and nav-item listeners are registered inside initMainPage() only.
+// Do NOT add them again here to avoid duplicate handlers.
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async () => {
@@ -578,8 +626,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetchPlanner();
     fetchStreak();
   } else {
-    navigateToPage('auth-page');
-    initAuthPage();
+    navigateToPage('auth-page'); // navigateToPage already calls initAuthPage() internally
   }
 });
 

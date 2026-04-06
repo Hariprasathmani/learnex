@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnEx - Dashboard</title>
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    // Emergency redirect for password recovery
+    if (window.location.hash.includes('access_token=') && window.location.hash.includes('type=recovery')) {
+      window.location.href = 'auth.html' + window.location.hash;
+    }
+  </script>
+  <script type="module" src="./js/auth-guard.js"></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- Mobile Hamburger and Overlay -->
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar injected via JS -->
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <div class="page-header-text">
+          <h1>Dashboard</h1>
+          <p>Track your learning progress and stay motivated</p>
+        </div>
+      </div>
+
+      <div id="dashboard-message" class="message-box"></div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card accent">
+          <div class="stat-icon">📚</div>
+          <div class="stat-value" id="dash-stat-notes">0</div>
+          <div class="stat-label">Total Notes</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="dash-stat-streak">0</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-value" id="dash-stat-focus">0</div>
+          <div class="stat-label">Focus Mins Today</div>
+        </div>
+      </div>
+
+      <!-- Usage Chart -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2>Usage Activity (Notes Created)</h2>
+        </div>
+        <div style="position: relative; height: 280px; width: 100%;">
+          <canvas id="usageChart"></canvas>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+        <!-- Streak Card -->
+        <div class="streak-card card">
+          <div class="streak-flame">🔥</div>
+          <div>Your current study streak is</div>
+          <div class="streak-number" id="dash-streak-big">0</div>
+          <div class="streak-days" id="dash-streak-days-label">days</div>
+          <p class="text-muted" style="margin: 16px 0;">Keep learning daily to maintain your streak!</p>
+          <button class="btn btn-primary btn-lg" id="btn-log-session">
+            Log Today's Study Session
+          </button>
+        </div>
+
+        <!-- Recent Notes -->
+        <div class="card">
+          <h2 style="margin-bottom: 20px;">Recent Notes</h2>
+          <div id="recent-notes-list">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="./js/dashboard.js"></script>
+</body>
+</html>

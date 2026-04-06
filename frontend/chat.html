@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnEx - AI Study Assistant</title>
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <!-- Add marked library for robust markdown parsing in chat -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script type="module" src="./js/auth-guard.js"></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="page-header-text">
+          <h1>Study Assistant</h1>
+          <p>Powered by Google Gemini AI</p>
+        </div>
+      </div>
+
+      <div id="chat-message-box" class="message-box"></div>
+
+      <!-- Chat Interface -->
+      <div class="chat-wrap shadow-md card" style="padding: 0;">
+        <div class="chat-messages" id="chat-box">
+          <div class="chat-message bot">
+            <div class="msg-avatar">🤖</div>
+            <div class="msg-bubble">
+              Hi there! I'm your AI study assistant. How can I help you today?
+              <span class="msg-time" id="welcome-time"></span>
+            </div>
+          </div>
+        </div>
+
+        <form id="chat-form" class="chat-input-row">
+          <input type="text" class="form-input" id="chat-input" placeholder="Type your question..." autocomplete="off" />
+          <button type="submit" class="btn btn-primary" id="btn-chat-send">Send ↗</button>
+        </form>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="./js/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnEx - Study Planner</title>
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <script type="module" src="./js/auth-guard.js"></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="page-header-text">
+          <h1>Study Planner</h1>
+          <p>Organize your sessions and stay on target</p>
+        </div>
+      </div>
+
+      <div id="planner-message" class="message-box"></div>
+
+      <!-- Add Session Form -->
+      <div class="planner-form-card">
+        <form id="planner-form" class="planner-form-grid">
+          <div>
+            <label class="form-label">Study Topic / Task</label>
+            <input type="text" id="plan-task" class="form-input" required placeholder="What do you want to learn?" />
+          </div>
+          <div>
+            <label class="form-label">Date</label>
+            <input type="date" id="plan-date" class="form-input" required />
+          </div>
+          <div>
+            <label class="form-label">Duration</label>
+            <select id="plan-duration" class="form-select">
+              <option value="15">15 mins</option>
+              <option value="30" selected>30 mins</option>
+              <option value="60">1 Hour</option>
+              <option value="120">2 Hours</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" id="btn-add-plan">Add Session</button>
+        </form>
+      </div>
+
+      <!-- Session List -->
+      <div class="card">
+        <h2 style="margin-bottom: 20px;">Upcoming Sessions</h2>
+        <div id="planner-list" class="session-list">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="./js/planner.js"></script>
+</body>
+</html>
