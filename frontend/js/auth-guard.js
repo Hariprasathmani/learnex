@@ -8,11 +8,11 @@ export async function checkAuth() {
   const isIndexPage = path === '/' || path.endsWith('index.html');
 
   if (!session) {
-    if (!isAuthPage) {
+    if (!isAuthPage && !isIndexPage) {
       window.location.href = 'auth.html';
       return null;
     }
-    document.body.classList.add('visible'); // Show auth page
+    document.body.classList.add('visible'); // Show auth or landing page
     return null;
   }
 
